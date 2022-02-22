@@ -1,0 +1,20 @@
+---
+- hosts: masters
+  remote_user: admin-energo
+  become: yes
+  become_method: sudo
+#  become_user: root
+  gather_facts: yes
+  connection: ssh
+  
+  vars:
+    sourse_file_master: ./iptables/rules.v4.master
+    sourse_file_worker: ./iptables/rules.v4.worker
+    destin_file: /etc/iptables/rules.v4
+
+  tasks:
+
+    - name: Copy files from foo to bar
+      copy: remote_src=false src={{sourse_file_master}} dest={{destin_file}}
+
+

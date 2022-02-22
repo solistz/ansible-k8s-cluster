@@ -1,0 +1,61 @@
+---
+- hosts: workers
+  remote_user: admin-energo
+  become: yes
+  become_method: sudo
+#  become_user: root
+  gather_facts: yes
+  connection: ssh
+  
+  vars:
+    sourse_file_master: ./iptables/rules.v4.master
+    sourse_file_worker: ./iptables/rules.v4.worker
+    destin_file: /etc/iptables/rules.v4
+
+  tasks:
+
+    - name: Config file iptables
+      copy: src={{sourse_file_worker}} dest={{destin_file}} mode=0644
+      notify: RestApache
+
+    - name: cat
+      shell: cat /etc/iptables/rules.v4
+      register: varrules
+
+    - debug:
+        var: varrules.stdout_lines
+
+
+  handlers:
+    - name: RestApache
+      service: name=iptables state=restarted
+
+- hosts: masters
+  remote_user: admin-energo
+  become: yes
+  become_method: sudo
+#  become_user: root
+  gather_facts: yes
+  connection: ssh
+  
+  vars:
+    sourse_file_master: ./iptables/rules.v4.master
+    sourse_file_worker: ./iptables/rules.v4.worker
+    destin_file: /etc/iptables/rules.v4
+
+  tasks:
+    - name: Config file iptables
+      copy: src={{sourse_file_master}} dest={{destin_file}} mode=0644
+      notify: RestApache1
+
+    - name: cat
+      shell: cat /etc/iptables/rules.v4
+      register: varrules1
+
+    - debug:
+        var: varrules1.stdout_lines
+
+
+  handlers:
+    - name: RestApache1
+      service: name=iptables state=restarted

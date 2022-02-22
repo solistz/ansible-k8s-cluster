@@ -1,0 +1,14 @@
+---
+- name: Inst k8s
+  hosts: all
+  become: yes
+
+  tasks:
+
+  - name: Add hosts
+    blockinfile:
+      path: "/etc/hosts"
+      block: |
+        10.200.152.20 master.hez.km.ua master
+        10.200.152.21 worker1.hez.km.ua worker1
+        10.200.152.22 worker2.hez.km.ua worker2

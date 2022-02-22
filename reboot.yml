@@ -1,0 +1,12 @@
+---
+- name: Inst k8s
+  hosts: 2021 2022
+  become: yes
+
+  tasks:
+  - name: Reboot when packages were updated
+    reboot:
+      msg: "Reboot initiated by Ansible for kernel updates"
+      post_reboot_delay: 120
+      reboot_timeout: 100
+      test_command: uptime
